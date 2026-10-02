@@ -96,3 +96,60 @@ def update_stock(inventory):
             return
 
     print("Product not found.")
+
+def search_product(inventory):
+    """Searches for a product by ID or Name."""
+    query = input("Enter Product ID or Name to search: ").strip().lower()
+    found = False
+
+    for prod in inventory["products"]:
+        if prod["id"].lower() == query or prod["name"].lower() == query:
+            print(f"\n--- Found Product ---")
+            print(f"ID: {prod['id']}")
+            print(f"Name: {prod['name']}")
+            print(f"Stock: {prod['stock']}")
+            print(f"Price: ${prod['price']:.2f}")
+            print(f"Transaction History: {prod.get('transactions', [])}")
+            found = True
+            break
+
+    if not found:
+        print("Product not found.")
+
+
+def main():
+    inventory = load_inventory()
+
+    while True:
+        print("\n=== Store Inventory Management System ===")
+        print("1. Display All Products")
+        print("2. Add Product")
+        print("3. Update Stock")
+        print("4. Search Product")
+        print("5. Save Inventory")
+        print("6. Exit")
+
+        choice = input("Enter your choice (1-6): ").strip()
+
+        if choice == "1":
+            display_all(inventory)
+        elif choice == "2":
+            add_product(inventory)
+        elif choice == "3":
+            update_stock(inventory)
+        elif choice == "4":
+            search_product(inventory)
+        elif choice == "5":
+            save_inventory(inventory)
+        elif choice == "6":
+            save_prompt = input("Do you want to save changes before exiting? (y/n): ").strip().lower()
+            if save_prompt == 'y':
+                save_inventory(inventory)
+            print("Exiting program. Goodbye!")
+            break
+        else:
+            print("Invalid option. Please enter a number from 1 to 6.")
+
+
+if __name__ == "__main__":
+    main()
