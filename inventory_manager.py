@@ -43,3 +43,56 @@ def display_all(inventory):
         if prod.get("transactions"):
             print(f"   Transaction History (Amounts): {prod['transactions']}")
 
+def add_product(inventory):
+    """Adds a new product dictionary to the inventory list."""
+    prod_id = input("Enter Product ID: ").strip()
+    
+    # Check if ID already exists
+    for prod in inventory["products"]:
+        if prod["id"] == prod_id:
+            print("Error: A product with this ID already exists.")
+            return
+
+    name = input("Enter Product Name: ").strip()
+    try:
+        stock = int(input("Enter Initial Stock Quantity: "))
+        price = float(input("Enter Product Price: "))
+    except ValueError:
+        print("Invalid input for stock or price. Product creation canceled.")
+        return
+
+    new_prod = {
+        "id": prod_id,
+        "name": name,
+        "stock": stock,
+        "price": price,
+        "transactions": []  # Stores history of all transaction amounts
+    }
+    
+    inventory["products"].append(new_prod)
+    print(f"Product '{name}' added successfully.")
+
+
+def update_stock(inventory):
+    """Updates the stock level and records transaction amount history."""
+    prod_id = input("Enter Product ID to update stock: ").strip()
+    
+    for prod in inventory["products"]:
+        if prod["id"] == prod_id:
+            try:
+                change = int(input("Enter stock change quantity (positive to add, negative to reduce): "))
+            except ValueError:
+                print("Invalid number.")
+                return
+
+            if prod["stock"] + change < 0:
+                print("Error: Stock cannot fall below zero.")
+                return
+
+            prod["stock"] += change
+            # Record the transaction amount history as requested in the scenario
+            prod["transactions"].append(change)
+            print(f"Updated stock for {prod['name']}. New Stock: {prod['stock']}")
+            return
+
+    print("Product not found.")
