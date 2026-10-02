@@ -20,3 +20,26 @@ def load_inventory():
             {"id": "103", "name": "Keyboard", "stock": 15, "price": 45.0, "transactions": []}
         ]
     }
+def save_inventory(inventory):
+    """Saves inventory data to inventory.json."""
+    try:
+        with open(FILENAME, "w") as file:
+            json.dump(inventory, file, indent=4)
+        print("Inventory saved successfully.")
+    except Exception as e:
+        print(f"Error saving inventory: {e}")
+
+
+def display_all(inventory):
+    """Displays all products and their details."""
+    products = inventory.get("products", [])
+    if not products:
+        print("\nNo products in inventory.")
+        return
+
+    print("\n--- Current Inventory ---")
+    for prod in products:
+        print(f"ID: {prod['id']} | Name: {prod['name']} | Stock: {prod['stock']} | Price: ${prod['price']:.2f}")
+        if prod.get("transactions"):
+            print(f"   Transaction History (Amounts): {prod['transactions']}")
+
